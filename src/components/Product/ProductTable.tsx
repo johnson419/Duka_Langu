@@ -37,7 +37,7 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 
-export type Driver = {
+export type Product = {
   id: number;
   name: string;
   phoneNumber: string;
@@ -49,12 +49,12 @@ export type Driver = {
   emergencyContact: string;
 };
 
-interface DriverFormProps {
-  drivers: Driver[];
+interface ProductFormProps {
+  Products: Product[];
 }
 
 
-export const columns: ColumnDef<Driver>[] = [
+export const columns: ColumnDef<Product>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -126,7 +126,7 @@ export const columns: ColumnDef<Driver>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const driver = row.original;
+      const Product = row.original;
 
       return (
         <DropdownMenu>
@@ -140,7 +140,7 @@ export const columns: ColumnDef<Driver>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/buses/bus-drivers/${driver.id}`}>
+              <Link href={`/buses/bus-Products/${Product.id}`}>
                 View
               </Link>
             </DropdownMenuItem>
@@ -153,8 +153,8 @@ export const columns: ColumnDef<Driver>[] = [
 ];
 
 
-export function BusDriverReactTable(drivers: DriverFormProps){
-  console.log(drivers);
+export function BusProductReactTable(Products: ProductFormProps){
+  console.log(Products);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -164,7 +164,7 @@ export function BusDriverReactTable(drivers: DriverFormProps){
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: drivers.drivers,
+    data: Products.Products,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
