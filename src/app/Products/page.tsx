@@ -1,10 +1,11 @@
 "use client";
 
+import { ProductTable } from "@/components/Product/ProductTable";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-const ProductsPage = () => {
+const Products = () => {
 
     const router = useRouter();
     
@@ -32,7 +33,7 @@ const ProductsPage = () => {
         {/* RECENT ACTIVITIES */}
         <div className="bg-white p-6 mt-8 rounded-lg border shadow max-sm:p-3 max-sm:rounded-xl">
           <div className="flex flex-col">
-            <ProductsPage />
+            <ProductTable />
           </div>
         </div>
       </div>
@@ -41,3 +42,5 @@ const ProductsPage = () => {
        </div>
     );
 };
+
+export default Products;

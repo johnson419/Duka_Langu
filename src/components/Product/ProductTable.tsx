@@ -36,22 +36,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import API_BASE_URL from "../api/config";
 
 export type Product = {
   id: number;
   name: string;
-  phoneNumber: string;
-  bus: string;
-  licenseNumber: string;
-  primaryAddress: string;
-  secondaryAddress: string;
-  dob: string;
-  emergencyContact: string;
+  price: number;
+  quantity: number;
+  image: string;
 };
 
-interface ProductFormProps {
-  Products: Product[];
-}
+
 
 
 export const columns: ColumnDef<Product>[] = [
@@ -93,35 +88,21 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "phoneNumber",
-    header: "Phone",
-    cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,
+    accessorKey: "price",
+    header: "Price",
+    cell: ({ row }) => <div>{row.getValue("price")}</div>,
   },
   {
-    accessorKey: "bus",
-    header: "Bus Name",
-    cell: ({ row }) => <div>{row.getValue("bus")}</div>,
+    accessorKey: "quantity",
+    header: "Quantity",
+    cell: ({ row }) => <div>{row.getValue("quantity")}</div>,
   },
   {
-    accessorKey: "licenseNumber",
-    header: "License Number",
-    cell: ({ row }) => <div>{row.getValue("licenseNumber")}</div>,
+    accessorKey: "image",
+    header: "Image",
+    cell: ({ row }) => <div>{row.getValue("image")}</div>,
   },
-  {
-    accessorKey: "address",
-    header: "Address",
-    cell: ({ row }) => <div>{row.getValue("address")}</div>,
-  },
-  {
-    accessorKey: "dob",
-    header: "Date of Birth",
-    cell: ({ row }) => <div>{row.getValue("dob")}</div>,
-  },
-  {
-    accessorKey: "emergencyContact",
-    header: "Emergency Contact",
-    cell: ({ row }) => <div>{row.getValue("emergencyContact")}</div>,
-  },
+  
   {
     id: "actions",
     enableHiding: false,
@@ -140,7 +121,7 @@ export const columns: ColumnDef<Product>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              <Link href={`/buses/bus-Products/${Product.id}`}>
+              <Link href={`/Products/${Product.id}`}>
                 View
               </Link>
             </DropdownMenuItem>
@@ -153,8 +134,9 @@ export const columns: ColumnDef<Product>[] = [
 ];
 
 
-export function BusProductReactTable(Products: ProductFormProps){
-  console.log(Products);
+export function ProductTable(){
+  const [products, setProducts] = React.useState<Product[]>([]);
+  const [loading, setLoading] = React.useState(true);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -163,8 +145,26 @@ export function BusProductReactTable(Products: ProductFormProps){
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  //Fetch Logic for the products
+    React.useEffect(() => {
+       const fetchProducts = async () => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/Products`);
+            const result = await response.json();
+            if (result.data) {
+              setProducts(result.data);
+            }
+          } catch (error) {
+            console.error("Error fetching Products:", error);
+          } finally {
+            setLoading(false);
+          }
+       };
+       fetchProducts();
+    }, []);
+    
   const table = useReactTable({
-    data: Products.Products,
+    data: [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
