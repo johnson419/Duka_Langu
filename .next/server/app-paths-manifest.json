@@ -1,12 +1,4 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/Products/[Product_id]/page": "app/Products/[Product_id]/page.js",
-  "/Products/create/page": "app/Products/create/page.js",
-  "/ShopKeeper/page": "app/ShopKeeper/page.js",
-  "/Shops/create/page": "app/Shops/create/page.js",
-  "/ShopKeeper/create/page": "app/ShopKeeper/create/page.js",
-  "/Shops/page": "app/Shops/page.js",
-  "/page": "app/page.js",
-  "/Products/page": "app/Products/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js"
+  "/Products/page": "app/Products/page.js"
 }
