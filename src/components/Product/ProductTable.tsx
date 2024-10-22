@@ -109,11 +109,6 @@ export const columns: ColumnDef<Product>[] = [
     header: "Stock",
     cell: ({ row }) => <div>{row.getValue("quantity")}</div>,
   },
-  // {
-  //   accessorKey: "image",
-  //   header: "Image",
-  //   cell: ({ row }) => <div>{row.getValue("image")}</div>,
-  // },
   
   {
     id: "actions",

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Sidebar from "@/components/ui/Sidebar";
 import Topbar from "@/components/ui/Topbar";
-
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
   title: "Duka Langu",
@@ -25,6 +25,7 @@ export default function RootLayout({
             </div>
           </main>
         </div>
+        <Analytics/>
       </body>
     </html>
   );
