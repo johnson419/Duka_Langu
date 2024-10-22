@@ -7,11 +7,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Bell, Search, User, BadgeCheck, LogOut } from "lucide-react";
+import { User, BadgeCheck, LogOut } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { MdNotifications } from "react-icons/md";
 
 
 const Topbar = () => {
