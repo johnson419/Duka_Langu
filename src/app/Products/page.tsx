@@ -15,7 +15,7 @@ const Products = () => {
       <div className="flex flex-col">
         <div className="flex justify-between items-center max-sm:flex-col max-sm:items-start max-sm:gap-y-2">
           <div>
-            <h1 className="bold-text text-xl">My Buses</h1>
+            <h1 className="bold-text text-xl">My Products</h1>
             <div className="flex items-center space-x-1 text-gray-600 text-sm">
               <h1>Dashboard</h1>
               <p>{">"}</p>
@@ -24,7 +24,7 @@ const Products = () => {
           </div>
 
           <div className="">
-            <Button onClick={() => router.push("/Products/create")} className="semibold-text">Create Bus</Button>
+            <Button onClick={() => router.push("/Products/create")} className="semibold-text">Create Product</Button>
           </div>
         </div>
 
