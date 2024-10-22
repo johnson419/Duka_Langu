@@ -15,16 +15,8 @@ import {
 } from "@/components/ui/form";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-
-// Example product data, replace with actual product data from your product table
-const productData = {
-  name: "Sample Product",
-  description: "Sample Description",
-  category: "Electronics",
-  price: 100,
-  stock: 10,
-  image: "/path/to/existing-product-image.jpg", // Example image URL from the product table
-};
+import { useRouter } from "next/router";
+import API_BASE_URL from "@/components/api/config";
 
 const schema = z.object({
   name: z.string().nonempty(),
@@ -38,23 +30,66 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 const EditProduct = () => {
-  // Initialize form with product data
+  const router = useRouter();
+  const { id } = router.query; // Get product id from route parameters
+
+  const [productData, setProductData] = useState<FormValues | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true); // Add a loading state
+
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: productData.name,
-      price: productData.price,
-      description: productData.description,
-      category: productData.category,
-      stock: productData.stock,
-      image: productData.image,
+      name: "",
+      price: 0,
+      description: "",
+      category: "",
+      stock: 0,
+      image: "",
     },
   });
 
-  const [imagePreview, setImagePreview] = useState<string | null>(productData.image);
+  // Fetch product data by ID from the API
+  useEffect(() => {
+    if (id) {
+      const fetchProduct = async () => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/ProductById/${id}`);
+          const result = await response.json();
+          if (result) {
+            setProductData(result); // Set the product from the API response
+            setImagePreview(result.image); // Set the initial image preview
+            form.reset(result); // Pre-fill the form with product data
+          }
+        } catch (error) {
+          console.error("Error fetching product:", error);
+        } finally {
+          setLoading(false); // Set loading to false
+        }
+      };
+      fetchProduct();
+    }
+  }, [id, form]);
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Updated product data:", data);
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/updateProduct`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...data, id }), // Send updated product data along with the product id
+      });
+
+      if (response.ok) {
+        console.log("Product updated successfully");
+        router.push("/Products"); // Navigate back to the products list after update
+      } else {
+        console.error("Error updating product:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,8 +97,13 @@ const EditProduct = () => {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setImagePreview(imageUrl); // Update the image preview when a new image is selected
+      form.setValue("image", file.name); // Set the file name to the form (update if backend needs file handling)
     }
   };
+
+  if (loading) {
+    return <div>Loading product details...</div>; // Show a loading state while fetching product data
+  }
 
   return (
     <div className="w-full">

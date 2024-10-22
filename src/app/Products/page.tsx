@@ -24,7 +24,7 @@ const Products = () => {
           </div>
 
           <div className="">
-            <Button onClick={() => router.push("/Products/create")} className="semibold-text">Create Product</Button>
+            <Button onClick={() => router.push("/Products/create")} className="semibold-text bg-gray-600">Create Product</Button>
           </div>
         </div>
 
