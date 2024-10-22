@@ -41,8 +41,10 @@ import API_BASE_URL from "../api/config";
 export type Product = {
   id: number;
   name: string;
+  description: string;
+  category: string;
   price: number;
-  quantity: number;
+  stock: number;
   image: string;
 };
 
