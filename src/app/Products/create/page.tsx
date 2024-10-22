@@ -13,6 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import Link from "next/link";
 
 const schema = z.object({
   name: z.string().nonempty(),
@@ -50,7 +51,9 @@ const CreateProduct = () => {
           <div>
             <h1 className="bold-text text-xl">Create Product</h1>
             <div className="flex items-center space-x-1 text-gray-600 text-sm">
-              <h1>Dashboard</h1>
+              <Link href="/Products">
+              < p>Product</p>
+              </Link>
               <p>{">"}</p>
               <h1>Create Product</h1>
             </div>

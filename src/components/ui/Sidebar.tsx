@@ -28,8 +28,8 @@ const Sidebar = () => {
     <div className="flex flex-col w-72 bg-white border-r">
       <div className="p-6 border-b">
         <Link href="/">
-          <span className="text-[#00457C] text-lg font-medium">Duka</span>
-          <span className="text-[#0079C1] text-lg bold-text">Langu</span>
+          <span className="text-gray-800 text-lg font-medium">Duka</span>
+          <span className="text-gray-600 text-lg bold-text">Langu</span>
         </Link>
       </div>
 
@@ -47,7 +47,7 @@ const Sidebar = () => {
               key={item.id}
               className={`w-full flex items-center gap-x-3 p-4 rounded-lg transition-colors duration-200 ${
                 isActive
-                  ? "bg-blue-600 text-white"  // Active background color
+                  ? "bg-gray-600 text-white"  // Active background color
                   : "bg-gray-100 text-gray-800 hover:bg-gray-200"
               }`}
             >
