@@ -166,7 +166,7 @@ export function ProductTable(){
     }, []);
     
   const table = useReactTable({
-    data: [],
+    data: products,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
