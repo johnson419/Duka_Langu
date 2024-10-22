@@ -90,20 +90,30 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
   },
   {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ row }) => <div>{row.getValue("description")}</div>,
+  },
+  {
+    accessorKey: "category",
+    header: "Category",
+    cell: ({ row }) => <div>{row.getValue("category")}</div>,
+  },
+  {
     accessorKey: "price",
     header: "Price",
     cell: ({ row }) => <div>{row.getValue("price")}</div>,
   },
   {
-    accessorKey: "quantity",
-    header: "Quantity",
+    accessorKey: "stock",
+    header: "Stock",
     cell: ({ row }) => <div>{row.getValue("quantity")}</div>,
   },
-  {
-    accessorKey: "image",
-    header: "Image",
-    cell: ({ row }) => <div>{row.getValue("image")}</div>,
-  },
+  // {
+  //   accessorKey: "image",
+  //   header: "Image",
+  //   cell: ({ row }) => <div>{row.getValue("image")}</div>,
+  // },
   
   {
     id: "actions",
