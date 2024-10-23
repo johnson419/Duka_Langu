@@ -156,8 +156,13 @@ export function ProductTable(){
     React.useEffect(() => {
        const fetchProducts = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/Products`);
+            const response = await fetch(`${API_BASE_URL}/products`, {
+              headers: {
+                'ngrok-skip-browser-warning': 'true'
+              }
+            });
             const result = await response.json();
+            console.log(result);
             if (result.data) {
               setProducts(result.data);
             }
@@ -188,6 +193,11 @@ export function ProductTable(){
       rowSelection,
     },
   });
+
+  if (loading) {
+    return <div>Loading...</div>;
+    
+  }
 
   return (
     <div className="w-full">
