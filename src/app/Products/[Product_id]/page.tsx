@@ -10,6 +10,8 @@ import {
   DollarSign,
   Package,
   ShoppingCart,
+  Trash2,
+  Edit,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +22,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import API_BASE_URL from "@/components/api/config";
+import router from "next/router";
+import { toast } from "react-hot-toast"; 
 
 type Product = {
   id: number;
@@ -39,7 +43,7 @@ const ProductDetails = () => {
 
   const images = [product?.image]; // Use product image in a simple array
 
-  
+  const router = useRouter(); // Initialize router
   const pathname  = usePathname(); // Extract product ID from the URL
   const id = pathname.split("/").pop();
 
@@ -71,6 +75,30 @@ const ProductDetails = () => {
       fetchProduct();
     }
   }, [id, isMounted]); // Fetch product only after mounting and ID availability
+
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this product?");
+    if (confirmDelete) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/deleteProduct/${id}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          toast.success("Product deleted successfully!"); // Show success toast
+          router.push("/Products"); // Navigate to products page or any desired route
+        } else {
+          throw new Error("Failed to delete product");
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+            toast.error("Error deleting product: " + error.message); // Show error toast
+          } else {
+            toast.error("Error deleting product: An unknown error occurred."); // Show default error toast
+          }
+      }
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -158,6 +186,26 @@ const ProductDetails = () => {
                 <p className="text-sm text-gray-500">Stock</p>
                 <p className="font-semibold">{product.stock} items</p>
               </div>
+<div className="flex items-center space-x-3">
+
+              {/* Edit Button */}
+              <Button 
+                className="bg-gray-600" 
+                onClick={() => router.push(`/Products/${product.id}/edit`)} // Navigate to the edit page
+              >
+                <Edit className="mr-2" /> Edit
+              </Button>
+              {/* Delete Button */}
+              <Button 
+                variant="destructive" 
+                onClick={handleDelete}
+              >
+                <Trash2 className="mr-2" /> Delete
+              </Button>
+            
+
+</div>
+             
             </div>
           </div>
         </CardContent>

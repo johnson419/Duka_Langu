@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/form";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
+import { usePathname, useRouter } from "next/navigation"; // Import useRouter
 import API_BASE_URL from "@/components/api/config";
 
 const schema = z.object({
@@ -30,12 +31,11 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 const EditProduct = () => {
-  const router = useRouter();
-  const { id } = router.query; // Get product id from route parameters
 
   const [productData, setProductData] = useState<FormValues | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(true); // Add a loading state
+  const [isMounted, setIsMounted] = useState(false); // Track if component is mounted
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -49,12 +49,27 @@ const EditProduct = () => {
     },
   });
 
+  const pathname = usePathname(); // Extract product ID from the URL
+ const id = pathname.split("/").pop(); // Extract product ID from the URL
+  const router = useRouter();
+
+
+  useEffect(() => {
+    setIsMounted(true); // Set the component as mounted
+  }, []);
+
   // Fetch product data by ID from the API
   useEffect(() => {
-    if (id) {
+    if (isMounted && id) {
       const fetchProduct = async () => {
         try {
-          const response = await fetch(`${API_BASE_URL}/ProductById/${id}`);
+          const response = await fetch(`${API_BASE_URL}/ProductById/${id}`, 
+            {
+              headers: {
+                'ngrok-skip-browser-warning': 'true'
+              }
+            }
+          );
           const result = await response.json();
           if (result) {
             setProductData(result); // Set the product from the API response
@@ -69,7 +84,7 @@ const EditProduct = () => {
       };
       fetchProduct();
     }
-  }, [id, form]);
+  }, [id, isMounted]);
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -242,7 +257,7 @@ const EditProduct = () => {
                 )}
 
                 <div className="my-4 flex justify-end">
-                  <Button type="submit">Save Changes</Button>
+                  <Button className="bg-gray-600" type="submit">Save Changes</Button>
                 </div>
               </form>
             </Form>
