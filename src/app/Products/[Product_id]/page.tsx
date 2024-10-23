@@ -9,6 +9,7 @@ import {
   Tag,
   DollarSign,
   Package,
+  ShoppingCart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,7 +42,7 @@ const ProductDetails = () => {
   
   const pathname  = usePathname(); // Extract product ID from the URL
   const id = pathname.split("/").pop();
-  
+
   useEffect(() => {
     setIsMounted(true); // Set the component as mounted
   }, []);
@@ -94,9 +95,6 @@ const ProductDetails = () => {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Product Details</CardTitle>
-          <CardDescription className="text-gray-600">
-            {product.name}
-          </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <div className="relative h-[200px] w-full sm:h-[400px] sm:w-[400px] mx-auto overflow-hidden">
@@ -135,6 +133,11 @@ const ProductDetails = () => {
 
           <div className="p-6 grid grid-cols gap-6 lg:grid-cols-2">
             <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+                <Package className="w-6 h-6" />
+                <p className="text-sm text-gray-500">Name</p>
+                <p className="font-semibold">{product.name}</p>
+              </div>
               <div className="flex items-center space-x-3">
                 <FileText className="w-6 h-6" />
                 <p className="text-sm text-gray-500">Description</p>
@@ -151,9 +154,9 @@ const ProductDetails = () => {
                 <p className="font-semibold">{product.price} TZS</p>
               </div>
               <div className="flex items-center space-x-3">
-                <Package className="w-6 h-6" />
+                <ShoppingCart className="w-6 h-6" />
                 <p className="text-sm text-gray-500">Stock</p>
-                <p className="font-semibold">{product.stock}</p>
+                <p className="font-semibold">{product.stock} items</p>
               </div>
             </div>
           </div>

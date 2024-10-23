@@ -27,7 +27,7 @@ const Sidebar = () => {
   return (
     <div className="flex flex-col w-72 bg-white border-r">
       <div className="p-6 border-b">
-        <Link href="/">
+        <Link href="/Products">
           <span className="text-gray-800 text-lg font-medium">Duka</span>
           <span className="text-gray-600 text-lg bold-text">Langu</span>
         </Link>
