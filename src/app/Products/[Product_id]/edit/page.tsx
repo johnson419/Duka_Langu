@@ -127,7 +127,7 @@ const EditProduct = () => {
           <div>
             <h1 className="bold-text text-xl">Edit Product</h1>
             <div className="flex items-center space-x-1 text-gray-600 text-sm">
-              <Link href="/Products">
+              <Link href = {`/Products/${id}`}>
                 <p>Product</p>
               </Link>
               <p>{">"}</p>
