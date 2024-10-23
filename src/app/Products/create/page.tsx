@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/form";
 import Link from "next/link";
 import { useState } from "react";
+import API_BASE_URL from "@/components/api/config";
+import toast from "react-hot-toast";
+import router  from "next/router";
 
 const schema = z.object({
   name: z.string().nonempty(),
@@ -42,8 +45,39 @@ const CreateProduct = () => {
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  const onSubmit = async (data: FormValues) => {
+    try{
+    const uploadData = {
+      ...data,
+      price: Number(data.price),
+      stock: Number(data.stock),
+    };
+
+    const response = await fetch(`${API_BASE_URL}/addProduct`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(uploadData),
+    });
+
+    if (response.ok) {
+      toast.success("Product created successfully");
+      router.push("/Products");
+      // Redirect to the products page
+      
+    } else {
+      const error = await response.text();
+      toast.error(`Failed to create product: ${error}`);
+      
+    }} catch (error) {
+      if (error instanceof Error) {
+        toast.error(`Failed to create product: ${error.message || error}`);
+        
+      } else {
+        toast.error("An unknown error occurred. Please try again.");
+      }
+    }
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
