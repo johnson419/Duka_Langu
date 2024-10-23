@@ -163,8 +163,8 @@ export function ProductTable(){
             });
             const result = await response.json();
             console.log(result);
-            if (result.data) {
-              setProducts(result.data);
+            if (result) {
+              setProducts(result);
             }
           } catch (error) {
             console.error("Error fetching Products:", error);
