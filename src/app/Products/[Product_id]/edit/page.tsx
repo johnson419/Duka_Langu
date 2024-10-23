@@ -15,27 +15,26 @@ import {
 } from "@/components/ui/form";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-// import { useRouter } from "next/router";
 import { usePathname, useRouter } from "next/navigation"; // Import useRouter
 import API_BASE_URL from "@/components/api/config";
+import toast from "react-hot-toast"; // Import react-hot-toast
 
 const schema = z.object({
-  name: z.string().nonempty(),
-  price: z.number().nonnegative(),
-  description: z.string().nonempty(),
-  category: z.string().nonempty(),
-  stock: z.number().nonnegative(),
-  image: z.string().nonempty(),
+  name: z.string().nonempty("Name is required"),
+  price: z.number().nonnegative("Price must be non-negative"),
+  description: z.string().nonempty("Description is required"),
+  category: z.string().nonempty("Category is required"),
+  stock: z.number().nonnegative("Stock must be non-negative"),
+  image: z.string().nonempty("Image is required"),
 });
 
 type FormValues = z.infer<typeof schema>;
 
 const EditProduct = () => {
-
   const [productData, setProductData] = useState<FormValues | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true); // Add a loading state
-  const [isMounted, setIsMounted] = useState(false); // Track if component is mounted
+  const [loading, setLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -49,13 +48,13 @@ const EditProduct = () => {
     },
   });
 
-  const pathname = usePathname(); // Extract product ID from the URL
- const id = pathname.split("/").pop(); // Extract product ID from the URL
+  const pathname = usePathname();
+  const segments = pathname.split("/");
+  const id = segments[segments.length - 2];
   const router = useRouter();
 
-
   useEffect(() => {
-    setIsMounted(true); // Set the component as mounted
+    setIsMounted(true);
   }, []);
 
   // Fetch product data by ID from the API
@@ -63,23 +62,29 @@ const EditProduct = () => {
     if (isMounted && id) {
       const fetchProduct = async () => {
         try {
-          const response = await fetch(`${API_BASE_URL}/ProductById/${id}`, 
-            {
-              headers: {
-                'ngrok-skip-browser-warning': 'true'
-              }
-            }
-          );
+          const response = await fetch(`${API_BASE_URL}/productById/${id}`, {
+            headers: {
+              'ngrok-skip-browser-warning': 'true',
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Failed to fetch product");
+          }
           const result = await response.json();
           if (result) {
-            setProductData(result); // Set the product from the API response
-            setImagePreview(result.image); // Set the initial image preview
-            form.reset(result); // Pre-fill the form with product data
+            setProductData(result);
+            setImagePreview(result.image);
+            form.reset(result);
           }
         } catch (error) {
-          console.error("Error fetching product:", error);
+          if (error instanceof Error) {
+            toast.error("Error fetching product: " + error.message);
+          } else {
+            toast.error("Error fetching product: An unknown error occurred.");
+          }
+          
         } finally {
-          setLoading(false); // Set loading to false
+          setLoading(false);
         }
       };
       fetchProduct();
@@ -88,22 +93,36 @@ const EditProduct = () => {
 
   const onSubmit = async (data: FormValues) => {
     try {
+      const updatedData = {
+        ...data,
+        price: Number(data.price),
+        stock: Number(data.stock),
+        id,
+      };
+
       const response = await fetch(`${API_BASE_URL}/updateProduct`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...data, id }), // Send updated product data along with the product id
+        body: JSON.stringify({ updatedData}),
       });
 
       if (response.ok) {
-        console.log("Product updated successfully");
-        router.push("/Products"); // Navigate back to the products list after update
+        toast.success("Product updated successfully");
+        router.push("/Products");
       } else {
-        console.error("Error updating product:", response.statusText);
+        const errorText =   await response.text();
+        toast.error("Error updating product: " + errorText);
+        // throw new Error("Error updating product: " + errorText);
       }
     } catch (error) {
-      console.error("Error updating product:", error);
+      if (error instanceof Error) {
+        toast.error("Error updating product: " + error.message);
+      }else{
+        toast.error("Error updating product: An unknown error occurred.");
+      }
+      
     }
   };
 
@@ -111,13 +130,13 @@ const EditProduct = () => {
     const file = event.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setImagePreview(imageUrl); // Update the image preview when a new image is selected
-      form.setValue("image", file.name); // Set the file name to the form (update if backend needs file handling)
+      setImagePreview(imageUrl);
+      form.setValue("image", file.name);
     }
   };
 
   if (loading) {
-    return <div>Loading product details...</div>; // Show a loading state while fetching product data
+    return <div>Loading product details...</div>;
   }
 
   return (
@@ -127,7 +146,7 @@ const EditProduct = () => {
           <div>
             <h1 className="bold-text text-xl">Edit Product</h1>
             <div className="flex items-center space-x-1 text-gray-600 text-sm">
-              <Link href = {`/Products/${id}`}>
+              <Link href={`/Products/${id}`}>
                 <p>Product</p>
               </Link>
               <p>{">"}</p>
@@ -195,7 +214,7 @@ const EditProduct = () => {
                     <FormItem>
                       <FormLabel>Price</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter product price" {...field} />
+                        <Input placeholder="Enter product price" type="number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -209,7 +228,7 @@ const EditProduct = () => {
                     <FormItem>
                       <FormLabel>Stock</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter product stock" {...field} />
+                        <Input placeholder="Enter product stock" type="number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
